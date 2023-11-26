@@ -67,9 +67,13 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Theras for Finance',
-      home: FutureBuilder(builder: (context, snapshot) {
-        return const MenuEmpresas(title: 'T H Ξ R A S');
-      }),
+      home: FutureBuilder(
+        builder: (context, snapshot) {
+          return const MenuEmpresas(title: 'T H Ξ R A S');
+          // return const MenuEmpresas(title: 'T H Ξ R A S');
+        },
+        future: null,
+      ),
     );
   }
 }

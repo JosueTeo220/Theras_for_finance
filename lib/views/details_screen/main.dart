@@ -97,7 +97,7 @@ class DetailsScreenState extends State<DetailsScreen> {
             children: <Widget>[
               Text(
                 'T H Ξ R A S',
-                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Color.fromARGB(255, 255, 255, 255))
               ),
             ],
           ),

@@ -60,7 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
             children: [
               Flexible(
                   flex: 1,
-                  child: Image.asset('../../../assets/UX/therasLogin.png')),
+                  child: Image.asset('assets/UX/therasLogin.png')),
               Flexible(
                   flex: isWeb() ? 1 : 2,
                   child: Container(
@@ -275,7 +275,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             IconButton(
                               splashRadius: 70,
                               icon:
-                                  Image.asset('../../../assets/UX/google.png'),
+                                  Image.asset('assets/UX/google.png'),
                               iconSize: 150,
                               onPressed: () async {
                                 try {
@@ -324,7 +324,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             IconButton(
                               splashRadius: 70,
                               icon: Image.asset(
-                                  '../../../assets/UX/facebook.png'),
+                                  'assets/UX/facebook.png'),
                               iconSize: 150,
                               onPressed: () async {
                                 final LoginResult result =
@@ -367,7 +367,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             IconButton(
                               splashRadius: 70,
                               icon:
-                                  Image.asset('../../../assets/UX/twitter.png'),
+                                  Image.asset('assets/UX/twitter.png'),
                               iconSize: 150,
                               onPressed: () {},
                             ),

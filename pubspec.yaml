@@ -85,6 +85,7 @@ flutter:
     - assets/UX/twitter.png
     - assets/UX/cadastro-theras.png
     - asset/
+    - assets/.env
     - assets/company_imagens/
     - asset/Empresas_data/
 

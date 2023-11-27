@@ -57,7 +57,7 @@ class _CadastroState extends State<Cadastro> {
             children: [
               Flexible(
                   flex: 1,
-                  child: Image.asset('../../../assets/UX/cadastro-theras.png')),
+                  child: Image.asset('assets/UX/cadastro-theras.png')),
               Flexible(
                   flex: isWeb() ? 1 : 2,
                   child: Container(
@@ -287,7 +287,7 @@ class _CadastroState extends State<Cadastro> {
                             IconButton(
                               splashRadius: 70,
                               icon:
-                                  Image.asset('../../../assets/UX/google.png'),
+                                  Image.asset('assets/UX/google.png'),
                               iconSize: 150,
                               onPressed: () async {
                                 try {
@@ -336,7 +336,7 @@ class _CadastroState extends State<Cadastro> {
                             IconButton(
                               splashRadius: 70,
                               icon: Image.asset(
-                                  '../../../assets/UX/facebook.png'),
+                                  'assets/UX/facebook.png'),
                               iconSize: 150,
                               onPressed: () async {
                                 final LoginResult result =
@@ -378,7 +378,7 @@ class _CadastroState extends State<Cadastro> {
                             IconButton(
                               splashRadius: 70,
                               icon:
-                                  Image.asset('../../../assets/UX/twitter.png'),
+                                  Image.asset('assets/UX/twitter.png'),
                               iconSize: 150,
                               onPressed: () {},
                             ),

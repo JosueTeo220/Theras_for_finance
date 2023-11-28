@@ -5,16 +5,21 @@ import './gavetinha.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'dart:convert';
 import '../menu_empresas/footer.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+
 
 class DetailsScreen extends StatefulWidget {
+  
   final String cardIndex;
   final String color_company;
   final String PM;
   final String nome_company;
   final String sector;
   // final Color textColor = Colors.black;
-  const DetailsScreen(this.cardIndex, this.color_company, this.PM,
-      this.nome_company, this.sector,
+  DetailsScreen(this.cardIndex, this.color_company, this.PM, this.nome_company,
+      this.sector,
       {super.key});
 
   @override
@@ -22,6 +27,8 @@ class DetailsScreen extends StatefulWidget {
 }
 
 class DetailsScreenState extends State<DetailsScreen> {
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  bool isFavorite = false;
   final double breakpoint = 800;
   final int paneProportion = 50;
   String tipoDeGrafico = "Finanças";
@@ -32,6 +39,60 @@ class DetailsScreenState extends State<DetailsScreen> {
   late int tipoEmpresa;
 
   DetailsScreenState();
+
+// Quando o usuario criar a conta ele tem que criar um doc com o email do usuario
+Future<void> writeDataCriouConta() async {
+    await FirebaseFirestore.instance
+        .collection("Usuarios_Data")
+        //!variavel
+        .doc('marcola@theras.com')      
+        .set({})
+        .onError((e, _) => print("Error writing document: $e"));
+
+        // get gabriel@gmail.com -> num mais alto de favoritos_gabriel + 1 -> 
+  }
+
+//quando o usuario favoritar isso que deve acontecer:
+  Future<void> writeData() async {
+    final dados = <String, String>{
+      //!variavel
+      "nome_company": "nome_valor",
+      "tick": "tick_valor",
+      "setor": "setor_valor"
+    };
+    await FirebaseFirestore.instance
+        .collection("Usuarios_Data")
+        //!variavel
+        .doc('marcola@theras.com')
+        .collection('favoritos')
+        //!variavel -> banco de dados card (maior valor) + 1 ou nome do card
+        .doc('1')
+        .set(dados)
+        .onError((e, _) => print("Error writing document: $e"));
+  }
+
+// tem que pegar os dados do firebase e armazenar em uma variavel, nesse caso, é dados:
+  Future<void> obterItensFavoritosDoFirebase() async {
+    var snapshot = await FirebaseFirestore.instance
+        .collection('Usuarios_Data')
+        //!variavel
+        .doc('marcola@theras.com')
+        .collection('favoritos')
+        .get();
+    List<DocumentSnapshot> documentos = snapshot.docs as List<DocumentSnapshot>;
+
+    for (var documento in documentos) {
+      Map<String, dynamic> dados = documento.data() as Map<String, dynamic>;
+      print('Dados do documento: $dados');
+    }
+  }
+
+  void getCurrentUser() async {
+  final User? user = auth.currentUser;
+  final uid = user?.email;
+  print('Uid: $uid');
+}
+
 
   Widget _getStatusContainer(String colorCompany) {
     Color backgroundColor;
@@ -97,10 +158,30 @@ class DetailsScreenState extends State<DetailsScreen> {
             children: <Widget>[
               Text(
                 'T H Ξ R A S',
-                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Color.fromARGB(255, 255, 255, 255))
+                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
               ),
             ],
           ),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.favorite, color: isFavorite ? Colors.red : null),
+              onPressed: () async {
+                setState(() {
+                  //! Firebase vai puxar os dados do isFavorite.
+                  isFavorite = !isFavorite;
+                });
+                if (isFavorite == true) {
+                  print('favoritado');
+                  await obterItensFavoritosDoFirebase();
+                  getCurrentUser();
+                }
+                else{
+                  print("desfavoritado");
+                }
+                // Lógica para alternar entre favorito e não favorito
+              },
+            ),
+          ],
         ),
         body: SingleChildScrollView(
             physics: isHovered ? const NeverScrollableScrollPhysics() : null,
@@ -165,7 +246,7 @@ class DetailsScreenState extends State<DetailsScreen> {
                                                     fontSize: 30,
                                                     corTexto: Colors.white,
                                                     padding: const EdgeInsets
-                                                        .fromLTRB(
+                                                            .fromLTRB(
                                                         30, 20, 30, 20))
                                               ],
                                             ),
@@ -236,8 +317,11 @@ class DetailsScreenState extends State<DetailsScreen> {
                                                               113, 99, 255, 1),
                                                           padding:
                                                               const EdgeInsets
-                                                                  .fromLTRB(10,
-                                                                  15, 10, 15),
+                                                                      .fromLTRB(
+                                                                  10,
+                                                                  15,
+                                                                  10,
+                                                                  15),
                                                           corTexto:
                                                               Colors.white,
                                                           alignment: Alignment
@@ -252,8 +336,11 @@ class DetailsScreenState extends State<DetailsScreen> {
                                                                   1),
                                                           padding:
                                                               const EdgeInsets
-                                                                  .fromLTRB(10,
-                                                                  15, 10, 15),
+                                                                      .fromLTRB(
+                                                                  10,
+                                                                  15,
+                                                                  10,
+                                                                  15),
                                                           corTexto:
                                                               Colors.white,
                                                           alignment: Alignment
@@ -267,7 +354,7 @@ class DetailsScreenState extends State<DetailsScreen> {
                                                       borderedContainer(
                                                           widget.nome_company,
                                                           padding: const EdgeInsets
-                                                              .fromLTRB(
+                                                                  .fromLTRB(
                                                               10, 15, 10, 15),
                                                           color: Color.fromRGBO(
                                                               245,
@@ -285,8 +372,11 @@ class DetailsScreenState extends State<DetailsScreen> {
                                                               1.0),
                                                           padding:
                                                               const EdgeInsets
-                                                                  .fromLTRB(10,
-                                                                  15, 10, 15),
+                                                                      .fromLTRB(
+                                                                  10,
+                                                                  15,
+                                                                  10,
+                                                                  15),
                                                           alignment: Alignment
                                                               .centerLeft),
                                                     ]))
@@ -405,7 +495,7 @@ class DetailsScreenState extends State<DetailsScreen> {
                                                       alignment:
                                                           Alignment.centerLeft,
                                                       padding: const EdgeInsets
-                                                          .fromLTRB(
+                                                              .fromLTRB(
                                                           15, 5, 10, 5)),
                                                   borderedContainer(LucroLiqu,
                                                       color: Color.fromRGBO(
@@ -413,7 +503,7 @@ class DetailsScreenState extends State<DetailsScreen> {
                                                       alignment:
                                                           Alignment.centerLeft,
                                                       padding: const EdgeInsets
-                                                          .fromLTRB(
+                                                              .fromLTRB(
                                                           15, 5, 10, 5)),
                                                   borderedContainer(CR5,
                                                       color: Color.fromRGBO(
@@ -421,7 +511,7 @@ class DetailsScreenState extends State<DetailsScreen> {
                                                       alignment:
                                                           Alignment.centerLeft,
                                                       padding: const EdgeInsets
-                                                          .fromLTRB(
+                                                              .fromLTRB(
                                                           15, 5, 10, 5)),
                                                   borderedContainer(PL,
                                                       color: Color.fromRGBO(
@@ -429,7 +519,7 @@ class DetailsScreenState extends State<DetailsScreen> {
                                                       alignment:
                                                           Alignment.centerLeft,
                                                       padding: const EdgeInsets
-                                                          .fromLTRB(
+                                                              .fromLTRB(
                                                           15, 5, 10, 5)),
                                                   borderedContainer(DY,
                                                       color: Color.fromRGBO(
@@ -437,7 +527,7 @@ class DetailsScreenState extends State<DetailsScreen> {
                                                       alignment:
                                                           Alignment.centerLeft,
                                                       padding: const EdgeInsets
-                                                          .fromLTRB(
+                                                              .fromLTRB(
                                                           15, 5, 10, 5)),
                                                   borderedContainer(ROE,
                                                       color: Color.fromRGBO(
@@ -445,7 +535,7 @@ class DetailsScreenState extends State<DetailsScreen> {
                                                       alignment:
                                                           Alignment.centerLeft,
                                                       padding: const EdgeInsets
-                                                          .fromLTRB(
+                                                              .fromLTRB(
                                                           15, 5, 10, 5)),
                                                   borderedContainer(LPA,
                                                       color: Color.fromRGBO(
@@ -453,7 +543,7 @@ class DetailsScreenState extends State<DetailsScreen> {
                                                       alignment:
                                                           Alignment.centerLeft,
                                                       padding: const EdgeInsets
-                                                          .fromLTRB(
+                                                              .fromLTRB(
                                                           15, 5, 10, 5)),
                                                 ],
                                               ))

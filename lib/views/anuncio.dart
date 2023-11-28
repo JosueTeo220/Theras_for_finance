@@ -6,7 +6,6 @@ import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 void main() {
   // Register the web plugin.
-
   // ignore: undefined_prefixed_name
   ui.platformViewRegistry.registerViewFactory(
     'adViewType',

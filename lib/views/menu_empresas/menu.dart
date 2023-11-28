@@ -128,13 +128,14 @@ class _MenuContainerState extends State<MenuContainer> {
                         child: Padding(
                           padding: EdgeInsets.all(16),
                           child: Card(
+                            color: Color.fromARGB(255, 255, 255, 255),
                             elevation: 10,
-                            shape: RoundedRectangleBorder(
+                            shape: const RoundedRectangleBorder(
                               side: BorderSide(
-                                color: Color.fromRGBO(245, 245, 245, 50),
+                                color: Color.fromARGB(255, 179, 179, 179),
                               ),
                               borderRadius:
-                                  const BorderRadius.all(Radius.circular(12)),
+                                  BorderRadius.all(Radius.circular(12)),
                             ),
                             clipBehavior: Clip.hardEdge,
                             child: Stack(

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:theras_app/views/menu_empresas/main.dart';
@@ -15,6 +16,16 @@ class _CadastroState extends State<Cadastro> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  // Quando o usuario criar a conta ele tem que criar um doc com o email do usuario
+Future<void> writeDataCriouConta(String email) async {
+    
+    await FirebaseFirestore.instance
+        .collection("Usuarios_Data")
+        .doc(email)
+        .set({})
+        .onError((e, _) => print("Error writing document: $e"));
+        // get gabriel@gmail.com -> num mais alto de favoritos_gabriel + 1 -> 
+  }
 
   Future<void> _registerUser() async {
     try {
@@ -24,6 +35,9 @@ class _CadastroState extends State<Cadastro> {
           email: _emailController.text,
           password: _passwordController.text,
         );
+        if(userCredential.user != null){
+          writeDataCriouConta(_emailController.text);
+        }
 
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
@@ -33,6 +47,7 @@ class _CadastroState extends State<Cadastro> {
         MaterialPageRoute(
           builder: (context) => MenuEmpresas(title: "THERAS"),
         );
+      
       }
     } catch (e) {
       print('Erro ao criar usuário: $e');
@@ -57,7 +72,7 @@ class _CadastroState extends State<Cadastro> {
             children: [
               Flexible(
                   flex: 1,
-                  child: Image.asset('assets/UX/cadastro-theras.png')),
+                  child: Image.asset('../../../assets/UX/cadastro-theras.png')),
               Flexible(
                   flex: isWeb() ? 1 : 2,
                   child: Container(
@@ -287,7 +302,7 @@ class _CadastroState extends State<Cadastro> {
                             IconButton(
                               splashRadius: 70,
                               icon:
-                                  Image.asset('assets/UX/google.png'),
+                                  Image.asset('../../../assets/UX/google.png'),
                               iconSize: 150,
                               onPressed: () async {
                                 try {
@@ -336,7 +351,7 @@ class _CadastroState extends State<Cadastro> {
                             IconButton(
                               splashRadius: 70,
                               icon: Image.asset(
-                                  'assets/UX/facebook.png'),
+                                  '../../../assets/UX/facebook.png'),
                               iconSize: 150,
                               onPressed: () async {
                                 final LoginResult result =
@@ -378,7 +393,7 @@ class _CadastroState extends State<Cadastro> {
                             IconButton(
                               splashRadius: 70,
                               icon:
-                                  Image.asset('assets/UX/twitter.png'),
+                                  Image.asset('../../../assets/UX/twitter.png'),
                               iconSize: 150,
                               onPressed: () {},
                             ),

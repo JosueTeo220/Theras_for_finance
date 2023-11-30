@@ -6,6 +6,7 @@ import '../../components/header.dart';
 class MenuEmpresas extends StatefulWidget {
   const MenuEmpresas({Key? key, required this.title});
   final String title;
+  
 
   @override
   State<MenuEmpresas> createState() => _MenuEmpresasState();

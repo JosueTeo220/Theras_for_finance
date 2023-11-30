@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import '../details_screen/main.dart';
@@ -10,10 +12,35 @@ class MenuContainer extends StatefulWidget {
 }
 
 class _MenuContainerState extends State<MenuContainer> {
+  bool visualizarFavs = false;
   List<dynamic> view = [];
   List<dynamic> filteredView = [];
   TextEditingController searchController = TextEditingController();
   FirebaseDatabase database = FirebaseDatabase.instance;
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  String? getCurrentUser() {
+  final User? user = auth.currentUser;
+  final uid = user?.email;
+  return uid;
+}
+  Future<void> obterItensFavoritosDoFirebase() async {
+    var usuario_atual = getCurrentUser();
+    var snapshot = await FirebaseFirestore.instance
+        .collection('Usuarios_Data')
+        .doc(usuario_atual)
+        .collection('favoritos')
+        .get();
+    List<DocumentSnapshot> documentos = snapshot.docs as List<DocumentSnapshot>;
+    List<String> favoritos = [];
+    for (var documento in documentos) {
+      Map<String, dynamic> dados = documento.data() as Map<String, dynamic>;
+
+      var tickValue = dados['tick'];
+      favoritos.add(dados['nome_company']);
+      print('Dados do documento: $tickValue');
+    }
+    filterFavorites(favoritos);
+  }
 
   void setarTabela() async {
     DatabaseReference ref = database.ref('tabela_testes');
@@ -36,6 +63,7 @@ class _MenuContainerState extends State<MenuContainer> {
     setState(() {
       view = jsonDecode(jsonData);
       filteredView = view;
+      visualizarFavs = false;
     });
   }
 
@@ -56,35 +84,64 @@ class _MenuContainerState extends State<MenuContainer> {
     });
   }
 
+  void filterFavorites(List<String> favoritos) {
+    setState(() {
+      if (!visualizarFavs) {
+        
+        filteredView = view.where((company) {
+          String nome_company = company['nome'].toString().toLowerCase();
+          return favoritos.map((nome) => nome.toLowerCase() ).contains(nome_company);
+        }).toList();
+        visualizarFavs = true;
+      } else {
+        filteredView = view;
+        visualizarFavs = false;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-
     return Scaffold(
       body: Flex(
         direction: Axis.vertical,
         children: [
-          Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: screenWidth * 0.25,
-              vertical: 15,
-            ),
-            child: TextField(
-              controller: searchController,
-              textAlign: TextAlign.center,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.search),
-                hintText: 'Pesquisar Empresa',
-                hintStyle: TextStyle(
-                  color: Color.fromARGB(255, 212, 212, 212),
-                  fontWeight: FontWeight.bold,
-                  fontSize: screenHeight * 0.02,
+          Row(
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: screenWidth * 0.25,
+                    vertical: 15,
+                  ),
+                  child: TextField(
+                    controller: searchController,
+                    textAlign: TextAlign.center,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.search),
+                      hintText: 'Pesquisar Empresa',
+                      hintStyle: TextStyle(
+                        color: Color.fromARGB(255, 212, 212, 212),
+                        fontWeight: FontWeight.bold,
+                        fontSize: screenHeight * 0.02,
+                      ),
+                    ),
+                    onChanged: filterCompanies,
+                  ),
                 ),
               ),
-              onChanged: filterCompanies,
-            ),
+              FloatingActionButton(
+                onPressed: () {
+                  obterItensFavoritosDoFirebase();
+                  print('Botão Favoritos pressionado');
+                },
+                tooltip: 'Meus Favoritos',
+                child: Icon(Icons.favorite),
+              ),
+            ],
           ),
           Expanded(
             child: FutureBuilder(
@@ -96,6 +153,7 @@ class _MenuContainerState extends State<MenuContainer> {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else if (snapshot.hasData) {
                   List<dynamic> view = jsonDecode(snapshot.data!);
+                  
 
                   return GridView.builder(
                     itemCount: filteredView.length,
@@ -117,9 +175,11 @@ class _MenuContainerState extends State<MenuContainer> {
 
                       return InkWell(
                         onTap: () {
+                          
                           Navigator.push(
                             context,
                             MaterialPageRoute(
+                              
                               builder: (context) => DetailsScreen(tick,
                                   color_company, PM, nome_company, sector),
                             ),
@@ -128,14 +188,13 @@ class _MenuContainerState extends State<MenuContainer> {
                         child: Padding(
                           padding: EdgeInsets.all(16),
                           child: Card(
-                            color: Color.fromARGB(255, 255, 255, 255),
                             elevation: 10,
-                            shape: const RoundedRectangleBorder(
+                            shape: RoundedRectangleBorder(
                               side: BorderSide(
-                                color: Color.fromARGB(255, 179, 179, 179),
+                                color: Color.fromRGBO(245, 245, 245, 50),
                               ),
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(12)),
+                                  const BorderRadius.all(Radius.circular(12)),
                             ),
                             clipBehavior: Clip.hardEdge,
                             child: Stack(

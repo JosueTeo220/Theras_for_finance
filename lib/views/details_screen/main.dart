@@ -9,14 +9,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 
-
 class DetailsScreen extends StatefulWidget {
   
-  final String cardIndex;
-  final String color_company;
-  final String PM;
-  final String nome_company;
-  final String sector;
+  String cardIndex;
+  String color_company;
+  String PM;
+
+  String nome_company;
+  String sector;
   // final Color textColor = Colors.black;
   DetailsScreen(this.cardIndex, this.color_company, this.PM, this.nome_company,
       this.sector,
@@ -39,60 +39,64 @@ class DetailsScreenState extends State<DetailsScreen> {
   late int tipoEmpresa;
 
   DetailsScreenState();
+    
+    String? getCurrentUser() {
+  final User? user = auth.currentUser;
+  final uid = user?.email;
+  return uid;
+}
 
-// Quando o usuario criar a conta ele tem que criar um doc com o email do usuario
-Future<void> writeDataCriouConta() async {
-    await FirebaseFirestore.instance
-        .collection("Usuarios_Data")
-        //!variavel
-        .doc('marcola@theras.com')      
-        .set({})
-        .onError((e, _) => print("Error writing document: $e"));
-
-        // get gabriel@gmail.com -> num mais alto de favoritos_gabriel + 1 -> 
+Future<bool> obterItensFavoritosDoFirebase() async {
+  try {
+    var usuario_atual = getCurrentUser();
+    var snapshot = await FirebaseFirestore.instance
+    
+        .collection('Usuarios_Data')
+        .doc(usuario_atual)
+        .collection('favoritos')
+        .doc(widget.cardIndex)
+        .get();
+        print(snapshot.exists);
+    return snapshot.exists;
+  } catch(erro){
+    print("Erro ao obter dados: $erro" );
+    return false;
   }
+    
+  }
+
+  Future<void> apagarItemFavoritoDoFirebase() async {
+  try {
+    var usuario_atual = getCurrentUser();
+    await FirebaseFirestore.instance
+        .collection('Usuarios_Data')
+        .doc(usuario_atual)
+        .collection('favoritos')
+        .doc(widget.cardIndex)
+        .delete();
+  } catch (e) {
+    print("Erro ao deletar registro: $e");
+  }
+}
 
 //quando o usuario favoritar isso que deve acontecer:
   Future<void> writeData() async {
     final dados = <String, String>{
-      //!variavel
-      "nome_company": "nome_valor",
-      "tick": "tick_valor",
-      "setor": "setor_valor"
+      "nome_company": widget.nome_company,
+      "tick": widget.cardIndex,
+      "setor": widget.sector
     };
+    var usuario_atual = getCurrentUser();
     await FirebaseFirestore.instance
         .collection("Usuarios_Data")
-        //!variavel
-        .doc('marcola@theras.com')
+        .doc(usuario_atual)
         .collection('favoritos')
-        //!variavel -> banco de dados card (maior valor) + 1 ou nome do card
-        .doc('1')
-        .set(dados)
+        .doc(widget.cardIndex).set(dados)
         .onError((e, _) => print("Error writing document: $e"));
   }
 
-// tem que pegar os dados do firebase e armazenar em uma variavel, nesse caso, é dados:
-  Future<void> obterItensFavoritosDoFirebase() async {
-    var snapshot = await FirebaseFirestore.instance
-        .collection('Usuarios_Data')
-        //!variavel
-        .doc('marcola@theras.com')
-        .collection('favoritos')
-        .get();
-    List<DocumentSnapshot> documentos = snapshot.docs as List<DocumentSnapshot>;
-
-    for (var documento in documentos) {
-      Map<String, dynamic> dados = documento.data() as Map<String, dynamic>;
-      print('Dados do documento: $dados');
-    }
-  }
-
-  void getCurrentUser() async {
-  final User? user = auth.currentUser;
-  final uid = user?.email;
-  print('Uid: $uid');
-}
-
+//quando usuario logar na conta dele tem que pegar os dados do firebase e armazenar em uma variavel, nesse caso, é dados:
+  
 
   Widget _getStatusContainer(String colorCompany) {
     Color backgroundColor;
@@ -122,7 +126,15 @@ Future<void> writeDataCriouConta() async {
   void initState() {
     super.initState();
     loadData(); // Call the loadData function to populate the list
+    inicializarIsFavorite();
     isHovered = false;
+  }
+ 
+  Future<void> inicializarIsFavorite() async {
+    bool resultado = await obterItensFavoritosDoFirebase();
+    setState(() {
+      isFavorite = resultado;
+    });
   }
 
   Future<void> loadData() async {
@@ -150,6 +162,17 @@ Future<void> writeDataCriouConta() async {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+           leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            //vitor corno
+            // Retorna à tela anterior
+            Navigator.pop(context);
+           /* Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => MenuEmpresas(title: 'T H Ξ R A S')),
+            );*/
+          },),
           backgroundColor: Color.fromRGBO(113, 99, 255, 1),
           centerTitle: true,
           title: const Row(
@@ -158,7 +181,7 @@ Future<void> writeDataCriouConta() async {
             children: <Widget>[
               Text(
                 'T H Ξ R A S',
-                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Color.fromARGB(255, 255, 255, 255)),
               ),
             ],
           ),
@@ -167,16 +190,13 @@ Future<void> writeDataCriouConta() async {
               icon: Icon(Icons.favorite, color: isFavorite ? Colors.red : null),
               onPressed: () async {
                 setState(() {
-                  //! Firebase vai puxar os dados do isFavorite.
                   isFavorite = !isFavorite;
                 });
                 if (isFavorite == true) {
-                  print('favoritado');
-                  await obterItensFavoritosDoFirebase();
-                  getCurrentUser();
+                  await writeData();
                 }
                 else{
-                  print("desfavoritado");
+                  await apagarItemFavoritoDoFirebase();
                 }
                 // Lógica para alternar entre favorito e não favorito
               },

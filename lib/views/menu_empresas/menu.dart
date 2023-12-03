@@ -19,10 +19,11 @@ class _MenuContainerState extends State<MenuContainer> {
   FirebaseDatabase database = FirebaseDatabase.instance;
   final FirebaseAuth auth = FirebaseAuth.instance;
   String? getCurrentUser() {
-  final User? user = auth.currentUser;
-  final uid = user?.email;
-  return uid;
-}
+    final User? user = auth.currentUser;
+    final uid = user?.email;
+    return uid;
+  }
+
   Future<void> obterItensFavoritosDoFirebase() async {
     var usuario_atual = getCurrentUser();
     var snapshot = await FirebaseFirestore.instance
@@ -87,10 +88,11 @@ class _MenuContainerState extends State<MenuContainer> {
   void filterFavorites(List<String> favoritos) {
     setState(() {
       if (!visualizarFavs) {
-        
         filteredView = view.where((company) {
           String nome_company = company['nome'].toString().toLowerCase();
-          return favoritos.map((nome) => nome.toLowerCase() ).contains(nome_company);
+          return favoritos
+              .map((nome) => nome.toLowerCase())
+              .contains(nome_company);
         }).toList();
         visualizarFavs = true;
       } else {
@@ -133,17 +135,17 @@ class _MenuContainerState extends State<MenuContainer> {
                   ),
                 ),
               ),
-              if( getCurrentUser() != null )
+              if (getCurrentUser() != null)
                 Container(
                   padding: const EdgeInsets.all(22),
                   child: FloatingActionButton(
-                onPressed: () {
-                  obterItensFavoritosDoFirebase();
-                  print('Botão Favoritos pressionado');
-                },
-                tooltip: 'Meus Favoritos',
-                child: Icon(Icons.favorite),
-              ),
+                    onPressed: () {
+                      obterItensFavoritosDoFirebase();
+                      print('Botão Favoritos pressionado');
+                    },
+                    tooltip: 'Meus Favoritos',
+                    child: Icon(Icons.favorite),
+                  ),
                 )
             ],
           ),
@@ -157,13 +159,12 @@ class _MenuContainerState extends State<MenuContainer> {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else if (snapshot.hasData) {
                   List<dynamic> view = jsonDecode(snapshot.data!);
-                  
 
                   return GridView.builder(
                     itemCount: filteredView.length,
                     shrinkWrap: true,
                     gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 450,
+                      maxCrossAxisExtent: 600,
                       childAspectRatio: 2,
                     ),
                     itemBuilder: (context, index) {
@@ -179,7 +180,6 @@ class _MenuContainerState extends State<MenuContainer> {
 
                       return InkWell(
                         onTap: () {
-                          
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -190,11 +190,11 @@ class _MenuContainerState extends State<MenuContainer> {
                         },
                         child: Padding(
                           padding: EdgeInsets.all(16),
-                          child: Card(
+                          child: Card( color:Colors.white,
                             elevation: 10,
                             shape: RoundedRectangleBorder(
                               side: BorderSide(
-                                color: Color.fromRGBO(245, 245, 245, 50),
+                                color: Colors.white,
                               ),
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(12)),
@@ -429,6 +429,43 @@ class _MenuContainerState extends State<MenuContainer> {
                                   })(),
                                 ),
                                 Positioned(
+                                  bottom: 0,
+                                  left: 0,
+                                  right: 0,
+                                  child: (() {
+                                    if (color_company == 'green') {
+                                      return Center(
+                                          child: Text(
+                                        'Bom Desempenho',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 10,
+                                        ),
+                                      ));
+                                    } else if (color_company == 'orange') {
+                                      return Center(
+                                          child: Text(
+                                        'Médio Desempenho',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 10,
+                                        ),
+                                      ));
+                                    } else if (color_company == 'red') {
+                                      return Center(
+                                          child: Text(
+                                        'Desempenho Abaixo do Segmento',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 10,
+                                        ),
+                                      ));
+                                    } else {
+                                      return SizedBox();
+                                    }
+                                  })(),
+                                ),
+                                Positioned(
                                   left: 5,
                                   right: 0,
                                   bottom: 15,
@@ -447,6 +484,32 @@ class _MenuContainerState extends State<MenuContainer> {
                                     ),
                                   ),
                                 ),
+                                Positioned(
+                                  right: 5,
+                                  bottom: 15,
+                                  child: Container(
+                                    width: screenWidth * 0.07,
+                                    height: screenHeight * 0.10,
+                                    child: ClipRect(
+                                      child: Image.asset(
+                                        'assets/company_imagens/' +
+                                            tick +
+                                            '.png',
+                                        fit: BoxFit.contain,
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                          // Este bloco é executado quando a imagem não pôde ser carregada
+                                          // Exiba uma imagem de substituição ou um ícone para indicar que a imagem não está disponível
+                                          return Icon(
+                                            Icons.error_outline,
+                                            size: 48,
+                                            color: Colors.white,
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                )
                               ],
                             ),
                           ),

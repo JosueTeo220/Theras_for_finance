@@ -63,7 +63,11 @@ Widget _buildColumn(BuildContext context) {
   return Column(
     children: [
       _buildTopContainer(context),
-      _buildBottomContainer(),
+      const SizedBox(height: 100),
+      Container(
+        padding: const EdgeInsets.all(10),
+        child: _buildBottomContainer(),
+      ),
       _buildTopAbout(context)
     ],
   );
@@ -71,17 +75,21 @@ Widget _buildColumn(BuildContext context) {
 
 Widget _buildTopContainer(BuildContext context) {
   String nomeBotao;
+  double tamanhoTituloPrincipal =
+      MediaQuery.of(context).size.width < 1000 ? 30 : 42;
+  double tamanhoFonteDescricaoPrincipal =
+      MediaQuery.of(context).size.width < 1000 ? 13 : 18;
+
   getCurrentUser() == null
       ? nomeBotao = "Acessar Cards Gratuitos"
       : nomeBotao = "Acessar Cards";
   return Stack(children: [
     Container(
       decoration: BoxDecoration(
-        color: Color.fromRGBO(113, 99, 255, 1),
-        borderRadius: MediaQuery.of(context).size.width < 1000
-                                      ? const BorderRadius.only(bottomRight: Radius.circular(100))
-                                      : const BorderRadius.only(bottomRight: Radius.circular(200))
-      ),
+          color: const Color.fromRGBO(113, 99, 255, 1),
+          borderRadius: MediaQuery.of(context).size.width < 1000
+              ? const BorderRadius.only(bottomRight: Radius.circular(50))
+              : const BorderRadius.only(bottomRight: Radius.circular(200))),
       child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
           child: Stack(children: [
@@ -102,7 +110,7 @@ Widget _buildTopContainer(BuildContext context) {
                             height: 100,
                           ),
                         ),
-                        SizedBox(width: 8),
+                        const SizedBox(width: 8),
                         Text(
                           'T H Ξ R A S',
                           style: TextStyle(fontSize: 26, color: Colors.white),
@@ -121,13 +129,13 @@ Widget _buildTopContainer(BuildContext context) {
                             );
                           },
                           child: Container(
-                            width: 120,
-                            height: 40,
+                            width: 140,
+                            height: 51,
                             decoration: BoxDecoration(
                               color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(25),
                             ),
-                            child: Material(
+                            child: const Material(
                               color: Colors.transparent,
                               child: Center(
                                 child: Text(
@@ -148,7 +156,7 @@ Widget _buildTopContainer(BuildContext context) {
                   ],
                 ),
                 const SizedBox(height: 100),
-                const Row(
+                Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
@@ -157,11 +165,11 @@ Widget _buildTopContainer(BuildContext context) {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 45,
+                          fontSize: tamanhoTituloPrincipal,
                           fontWeight: FontWeight.w900,
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 30,
                       ),
                     ]),
@@ -173,13 +181,12 @@ Widget _buildTopContainer(BuildContext context) {
                         '''Desenvolvemos análises de empresas na bolsa brasileira com modelos de\naprendizado de máquina, com Regressão Polimonial, K-means e Redes Neurais.''',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontSize: 15,
+                          fontSize: tamanhoFonteDescricaoPrincipal,
                           height: 1.7,
                           color: Colors.grey[300],
                         ))
                   ],
                 ),
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
@@ -197,9 +204,9 @@ Widget _buildTopContainer(BuildContext context) {
                       },
                       child: Container(
                         width: 250,
-                        height: 40,
+                        height: 52,
                         decoration: BoxDecoration(
-                          gradient: LinearGradient(colors: [
+                          gradient: const LinearGradient(colors: [
                             (Color(0xff374ABE)),
                             (Color(0xff64B6FF))
                           ]),
@@ -208,7 +215,7 @@ Widget _buildTopContainer(BuildContext context) {
                         child: Center(
                           child: Text(
                             nomeBotao,
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 18,
                               letterSpacing: 1,
@@ -220,7 +227,6 @@ Widget _buildTopContainer(BuildContext context) {
                     )
                   ],
                 ),
-                // ... Outros widgets
                 const SizedBox(height: 100),
               ],
             )
@@ -328,67 +334,71 @@ class ImageCarousel extends StatelessWidget {
 }
 
 Widget _buildTopAbout(BuildContext context) {
+  double tamanhoFonteDescricao =
+      MediaQuery.of(context).size.width < 1000 ? 16 : 20;
   return Container(
     color: Color.fromRGBO(250, 250, 250, 1),
     child: Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
+        const SizedBox(height: 100),
         Text(
           'Sobre Nós',
           textAlign: TextAlign.center,
           style: TextStyle(
-            color: Colors.black,
+            letterSpacing: 10,
+            color: Color(0xFF7063FF),
             fontSize: 45,
             fontWeight: FontWeight.w900,
           ),
         ),
-        Row(
+        const Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            SizedBox(height: 2),
-            SizedBox(width: 40),
-            Text(
+             SizedBox(height: 200),
+             SizedBox(width: 40),
+             Text(
               'Sistema de apoio para\ninvestidores',
               textAlign: TextAlign.start,
               style: TextStyle(
-                color: Colors.black,
+                color: Color(0xFF7063FF),
                 fontSize: 40,
                 fontWeight: FontWeight.w700,
               ),
             ),
           ],
         ),
-        Row(
+        Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'Somos estudantes de engenharia da computação, estudamos na faculdade UNIP - Indianópolis em São Paulo Capital. Do nosso time temos alguns integrantes que estão no 7º e 8º semestre, e boa parte do grupo ja está atuando no mercado de trabalho, mas nenhum de nós atua no mercado financeiro.\n\nA Theras é um projeto do nosso trabalho anual do curso de engenharia da computação, onde temos que desenvolver um Sistema de Apoio a Decisão (SAD). A ideia é desenvolver um sistema que ajude na tomada de decisão do investidor iniciante, baseando-se em indicadores financeiros como o lucro líquido, patrimônio, receitas, passivos e ativos.\n\nAtuamos em várias frentes neste projeto, como por exemplo engenharia de software com o desenvolvimento do front com Flutter, arquitetura de back end com a AWS, engenharia de dados e ciência de dados.',
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                    fontSize: 20,
-                    height: 1.7,
-                    color: Colors.black,
-                  ),
+            Container(
+              padding: EdgeInsets.all(20),
+              child: Text(
+                'Somos estudantes de engenharia da computação, estudamos na faculdade UNIP - Indianópolis em São Paulo Capital. Do nosso time temos alguns integrantes que estão no 7º e 8º semestre, e boa parte do grupo ja está atuando no mercado de trabalho, mas nenhum de nós atua no mercado financeiro.\n\nA Theras é um projeto do nosso trabalho anual do curso de engenharia da computação, onde temos que desenvolver um Sistema de Apoio a Decisão (SAD). A ideia é desenvolver um sistema que ajude na tomada de decisão do investidor iniciante, baseando-se em indicadores financeiros como o lucro líquido, patrimônio, receitas, passivos e ativos.\n\nAtuamos em várias frentes neste projeto, como por exemplo engenharia de software com o desenvolvimento do front com Flutter, arquitetura de back end com a AWS, engenharia de dados e ciência de dados.',
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                  fontSize: tamanhoFonteDescricao,
+                  height: 1.7,
+                  color: Colors.black,
                 ),
               ),
             ),
             Container(
-              padding: EdgeInsets.only(bottom: 300),
+              padding: EdgeInsets.only(bottom: 100),
               constraints: BoxConstraints(maxWidth: 1000),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  const SizedBox(height: 100),
                   Transform.scale(
                     scale: 1,
                     child: Image.asset(
                       'assets/company_imagens/therasYTB.jpeg',
-                      width: MediaQuery.of(context).size.width * 0.4,
-                      height: MediaQuery.of(context).size.width * 0.4,
+                      width: MediaQuery.of(context).size.width < 1000 ? MediaQuery.of(context).size.width * 0.82 : MediaQuery.of(context).size.width * 0.4 ,
+                      height: MediaQuery.of(context).size.width < 1000 ? MediaQuery.of(context).size.height * 0.82 : MediaQuery.of(context).size.height * 0.4 ,
                     ),
                   ),
+                  const SizedBox(height: 50),
                   ElevatedButton(
                     onPressed: () async {
                       js.context.callMethod('open', [

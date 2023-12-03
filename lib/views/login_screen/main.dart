@@ -217,7 +217,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                     },
                                     child: const Text(
                                       "Login",
-                                      style: TextStyle(fontSize: 20),
+                                      style: TextStyle(fontSize: 20,
+                                      color: Colors.white),
                                     ),
                                   ),
                                 ),
@@ -321,56 +322,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 }
                               },
                             ),
-                            IconButton(
-                              splashRadius: 70,
-                              icon: Image.asset(
-                                  'assets/UX/facebook.png'),
-                              iconSize: 150,
-                              onPressed: () async {
-                                final LoginResult result =
-                                    await FacebookAuth.instance.login();
-
-                                switch (result.status) {
-                                  case LoginStatus.success:
-                                    final AuthCredential credential =
-                                        FacebookAuthProvider.credential(
-                                            result.accessToken!.token);
-                                    final UserCredential authResult =
-                                        await FirebaseAuth.instance
-                                            .signInWithCredential(credential);
-                                    final User? user = authResult.user;
-
-                                    if (user != null) {
-                                      // O usuário está autenticado com sucesso
-                                      print(
-                                          'Usuário logado com sucesso: ${user.displayName}');
-                                    } else {
-                                      // O login com o Facebook falhou
-                                      print('Falha no login com o Facebook');
-                                    }
-                                    break;
-                                  case LoginStatus.cancelled:
-                                    // O usuário cancelou o login com o Facebook
-                                    print('Login com o Facebook cancelado');
-                                    break;
-                                  case LoginStatus.failed:
-                                    // Lidar com erros de autenticação do Facebook
-                                    print(
-                                        'Erro ao fazer login com o Facebook');
-                                    break;
-                                  case LoginStatus.operationInProgress:
-                                    // Lida com o caso de operação em andamento (se necessário).
-                                    break;
-                                }
-                              },
-                            ),
-                            IconButton(
-                              splashRadius: 70,
-                              icon:
-                                  Image.asset('assets/UX/twitter.png'),
-                              iconSize: 150,
-                              onPressed: () {},
-                            ),
+                            
                           ],
                         )
                       ],

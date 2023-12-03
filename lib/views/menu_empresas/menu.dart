@@ -134,14 +134,17 @@ class _MenuContainerState extends State<MenuContainer> {
                 ),
               ),
               if( getCurrentUser() != null )
-                FloatingActionButton(
+                Container(
+                  padding: const EdgeInsets.all(22),
+                  child: FloatingActionButton(
                 onPressed: () {
                   obterItensFavoritosDoFirebase();
                   print('Botão Favoritos pressionado');
                 },
                 tooltip: 'Meus Favoritos',
                 child: Icon(Icons.favorite),
-              )
+              ),
+                )
             ],
           ),
           Expanded(

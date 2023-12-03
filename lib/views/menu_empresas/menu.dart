@@ -402,7 +402,7 @@ class _MenuContainerState extends State<MenuContainer> {
                                           color: Colors.green,
                                         ),
                                         child: SizedBox(
-                                          height: 15,
+                                          height: 18,
                                         ),
                                       );
                                     } else if (color_company == 'orange') {
@@ -411,7 +411,7 @@ class _MenuContainerState extends State<MenuContainer> {
                                           color: Colors.orange,
                                         ),
                                         child: SizedBox(
-                                          height: 15,
+                                          height: 19,
                                         ),
                                       );
                                     } else if (color_company == 'red') {
@@ -420,7 +420,7 @@ class _MenuContainerState extends State<MenuContainer> {
                                           color: Colors.red,
                                         ),
                                         child: SizedBox(
-                                          height: 15,
+                                          height: 19,
                                         ),
                                       );
                                     } else {
@@ -439,7 +439,7 @@ class _MenuContainerState extends State<MenuContainer> {
                                         'Bom Desempenho',
                                         style: TextStyle(
                                           color: Colors.white,
-                                          fontSize: 10,
+                                          fontSize: 15,
                                         ),
                                       ));
                                     } else if (color_company == 'orange') {
@@ -448,7 +448,7 @@ class _MenuContainerState extends State<MenuContainer> {
                                         'Médio Desempenho',
                                         style: TextStyle(
                                           color: Colors.white,
-                                          fontSize: 10,
+                                          fontSize: 15,
                                         ),
                                       ));
                                     } else if (color_company == 'red') {
@@ -457,7 +457,7 @@ class _MenuContainerState extends State<MenuContainer> {
                                         'Desempenho Abaixo do Segmento',
                                         style: TextStyle(
                                           color: Colors.white,
-                                          fontSize: 10,
+                                          fontSize: 15,
                                         ),
                                       ));
                                     } else {
@@ -493,7 +493,7 @@ class _MenuContainerState extends State<MenuContainer> {
                                     child: ClipRect(
                                       child: Image.asset(
                                         'assets/company_imagens/' +
-                                            tick +
+                                            tick.toString().toLowerCase() +
                                             '.png',
                                         fit: BoxFit.contain,
                                         errorBuilder:

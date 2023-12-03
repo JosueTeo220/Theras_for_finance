@@ -3,6 +3,7 @@ import '../menu_empresas/footer.dart';
 import '../menu_empresas/menu.dart';
 import '../../components/header.dart';
 
+
 class MenuEmpresas extends StatefulWidget {
   const MenuEmpresas({Key? key, required this.title});
   final String title;

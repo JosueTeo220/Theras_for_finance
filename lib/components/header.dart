@@ -24,6 +24,16 @@ class HeaderTheras extends StatelessWidget implements PreferredSizeWidget {
     }
   }
     return AppBar(
+      leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Color.fromARGB(255, 255, 255, 255),),
+          onPressed: () {
+            //vitor corno
+            // Retorna à tela anterior
+            Navigator.pop(context);
+            print("");
+
+           
+          },),
       backgroundColor: const Color(0xFF7063FF),
       centerTitle: true,
       title: Flex(

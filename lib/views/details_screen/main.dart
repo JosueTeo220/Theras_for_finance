@@ -163,17 +163,14 @@ Future<bool> obterItensFavoritosDoFirebase() async {
     return Scaffold(
         appBar: AppBar(
            leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: Icon(Icons.arrow_back, color: Color.fromARGB(255, 255, 255, 255),),
           onPressed: () {
             //vitor corno
             // Retorna à tela anterior
             Navigator.pop(context);
-           /* Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => MenuEmpresas(title: 'T H Ξ R A S')),
-            );*/
+            print("");
           },),
-          backgroundColor: Color.fromRGBO(113, 99, 255, 1),
+          backgroundColor: const Color.fromRGBO(113, 99, 255, 1),
           centerTitle: true,
           title: const Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -186,7 +183,7 @@ Future<bool> obterItensFavoritosDoFirebase() async {
             ],
           ),
           actions: [
-            IconButton(
+             if( getCurrentUser() != null ) IconButton(
               icon: Icon(Icons.favorite, color: isFavorite ? Colors.red : null),
               onPressed: () async {
                 setState(() {
@@ -198,10 +195,9 @@ Future<bool> obterItensFavoritosDoFirebase() async {
                 else{
                   await apagarItemFavoritoDoFirebase();
                 }
-                // Lógica para alternar entre favorito e não favorito
               },
-            ),
-          ],
+           ),
+        ],
         ),
         body: SingleChildScrollView(
             physics: isHovered ? const NeverScrollableScrollPhysics() : null,

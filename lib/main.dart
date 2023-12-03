@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:theras_app/views/home_screen/main.dart';
+import 'package:theras_app/views/login_screen/cadastro.dart';
 import 'package:theras_app/views/login_screen/main.dart';
 import 'views/menu_empresas/main.dart';
 import 'views/details_screen/main.dart';

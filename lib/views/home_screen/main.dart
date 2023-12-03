@@ -1,12 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import '../menu_empresas/footer.dart';
 import 'dart:js' as js;
 import '../login_screen/main.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../menu_empresas/main.dart';
-import '../details_screen/main.dart';
 
-class HomeScreen extends StatelessWidget {
+final FirebaseAuth auth = FirebaseAuth.instance;
+String? getCurrentUser() {
+  final User? user = auth.currentUser;
+  final uid = user?.email;
+  return uid;
+}
+
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+String nomeBotao = '';
+
+String alterarAcessarCardsAuth() {
+  getCurrentUser() == null
+      ? nomeBotao = "Acessar Cards Gratuitos"
+      : nomeBotao = "Acessar Cards";
+  return nomeBotao;
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -14,23 +36,22 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           children: [
             _buildColumn(context),
-             Container(
-                height: 50,
-                color: const Color(0xFF7063FF),
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      '© THΞRAS for Finance - APS 2023 - Todos os direitos reservados',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.white,
-                      ),
+            Container(
+              height: 50,
+              color: const Color(0xFF7063FF),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '© THΞRAS for Finance - APS 2023 - Todos os direitos reservados',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.white,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            
+            ),
           ],
         ),
       ),
@@ -49,13 +70,17 @@ Widget _buildColumn(BuildContext context) {
 }
 
 Widget _buildTopContainer(BuildContext context) {
+  String nomeBotao;
+  getCurrentUser() == null
+      ? nomeBotao = "Acessar Cards Gratuitos"
+      : nomeBotao = "Acessar Cards";
   return Stack(children: [
     Container(
       decoration: BoxDecoration(
         color: Color.fromRGBO(113, 99, 255, 1),
-        borderRadius: BorderRadius.only(
-          bottomRight: Radius.circular(200),
-        ),
+        borderRadius: MediaQuery.of(context).size.width < 1000
+                                      ? const BorderRadius.only(bottomRight: Radius.circular(100))
+                                      : const BorderRadius.only(bottomRight: Radius.circular(200))
       ),
       child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
@@ -100,7 +125,7 @@ Widget _buildTopContainer(BuildContext context) {
                             height: 40,
                             decoration: BoxDecoration(
                               color: Colors.white,
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: BorderRadius.circular(10),
                             ),
                             child: Material(
                               color: Colors.transparent,
@@ -122,7 +147,8 @@ Widget _buildTopContainer(BuildContext context) {
                     )
                   ],
                 ),
-                Row(
+                const SizedBox(height: 100),
+                const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
@@ -153,11 +179,12 @@ Widget _buildTopContainer(BuildContext context) {
                         ))
                   ],
                 ),
-                SizedBox(height: 20),
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    const SizedBox(height: 100),
                     TextButton(
                       onPressed: () {
                         Navigator.push(
@@ -180,7 +207,7 @@ Widget _buildTopContainer(BuildContext context) {
                         ),
                         child: Center(
                           child: Text(
-                            "Acessar cards gratuitos",
+                            nomeBotao,
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 18,
@@ -194,31 +221,10 @@ Widget _buildTopContainer(BuildContext context) {
                   ],
                 ),
                 // ... Outros widgets
-                SizedBox(height: 20),
-                Container(
-                  padding: EdgeInsets.only(bottom: 50),
-                  height: 200,
-                  decoration: BoxDecoration(
-                    color: Color.fromRGBO(113, 99, 255, 1),
-                    borderRadius: BorderRadius.only(
-                      bottomRight: Radius.circular(300),
-                    ),
-                  ),
-                ),
+                const SizedBox(height: 100),
               ],
             )
           ])),
-    ),
-    Center(
-      child: Container(
-          padding: EdgeInsets.only(top: 350, bottom: 50),
-          width: MediaQuery.of(context).size.width / 1.25,
-          height: MediaQuery.of(context).size.height / 1.25,
-          child: Center(
-              child: Image.asset(
-            "assets/company_imagens/dashboardTHERAS.jpeg",
-            scale: 1,
-          ))),
     ),
   ]);
 }

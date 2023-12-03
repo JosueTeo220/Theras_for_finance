@@ -133,14 +133,15 @@ class _MenuContainerState extends State<MenuContainer> {
                   ),
                 ),
               ),
-              FloatingActionButton(
+              if( getCurrentUser() != null )
+                FloatingActionButton(
                 onPressed: () {
                   obterItensFavoritosDoFirebase();
                   print('Botão Favoritos pressionado');
                 },
                 tooltip: 'Meus Favoritos',
                 child: Icon(Icons.favorite),
-              ),
+              )
             ],
           ),
           Expanded(
@@ -179,7 +180,6 @@ class _MenuContainerState extends State<MenuContainer> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              
                               builder: (context) => DetailsScreen(tick,
                                   color_company, PM, nome_company, sector),
                             ),
